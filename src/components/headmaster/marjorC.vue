@@ -4,55 +4,35 @@
             <!-- 搜索框开始 -->
             <div>
             <el-input
-                size="mini"
                 class="inputSearch"
+                size="mini"
                 v-model="input"
-                placeholder="根据下设学院名称查询"
+                placeholder="根据专业名称查询"
             >
             </el-input>
             <!-- 搜索按钮开始 -->
             <el-button
-                size="mini"
                 class="SearchButton"
+                size="mini"
                 icon="el-icon-search"
                 type="primary"
                 circle
             ></el-button>
             <!-- 搜索按钮结束 -->
-            </div>
+        </div>
             <!-- 搜索框结束 -->
-            <div class="divBtn">
-            <!-- 一键导入按钮开始 -->
-            <el-button
-            size="mini"
-            type="primary"
-            class="btnOne"
-            >
-            一键导入
-            </el-button>
-            <!-- 一键导入按钮结束 -->
-            <!-- 格式下载开始 -->
-            <el-button
-            size="mini"
-            type="primary"
-            class="btnTwo"
-            >
-            格式下载
-            </el-button>
-            <!-- 格式下载结束 -->
-            </div>
-            <div class="addBtn">
             <!-- 添加按钮开始 -->
+            <div class="addBtn">
             <el-button
-            size="mini"
-            type="primary"
-            plain
-            @click="handleAdd()"
+                type="primary"
+                size="mini"
+                plain
+                @click="btnAdd()"
             >
             添加
             </el-button>
-            <!-- 添加按钮结束 -->
             </div>
+            <!-- 添加按钮结束 -->
         </div>
         <!-- 表格开始 -->
         <div class="boxTwo">
@@ -60,28 +40,35 @@
             :data="tableData.slice((currentPage - 1) * pageSize,currentPage * pageSize)"
             :stripe="true"
             border
-            style="width: 85%;top:5%;left:5%"
+            style="width: 90%;top:5%;left:5%"
             :header-cell-style="{fontWeight:'bold', fontSize:'14px', color:'#000'}"
             >
             <el-table-column
                 align="center"
-                label="下设学院"
-                prop="LowerSchool"
+                label="所属学院"
+                prop="BelongSchool"
                 min-width="200"
             >
             </el-table-column>
             <el-table-column
                 align="center"
-                label="院长名称"
-                prop="DeanName"
+                label="专业班级"
+                prop="ProfessionalClass"
                 min-width="200"
+            >
+            </el-table-column>
+            <el-table-column
+                align="center"
+                label="人数"
+                prop="ProfessionalNumber"
+                min-width="150"
             >
             </el-table-column>
             <el-table-column
                 align="center"
                 label="数据操作"
                 min-width="300"
-                >
+            >
             <template slot-scope="scope">
             <el-button
                 size="mini"
@@ -106,22 +93,21 @@
             </el-table>
         </div>
         <!-- 表格结束 -->
-        <!-- 学院总数开始 -->
+        <!-- 专业总数开始 -->
         <div class="boxThree">
-        <span class="sumNum">学院总数 : num</span>
+        <span class="sumNum">专业总数 : num</span>
         </div>
-        <!-- 学院总数结束 -->
+        <!-- 专业总数结束 -->
         <div class="boxFive">
         <el-pagination
+        align="center"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[5]"
+            :page-sizes="[6]"
             :page-size="pageSize"
             layout="total, jumper"
-            :total="tableData.length"
-            align="center"
-            >
+            :total="tableData.length">
         </el-pagination>
         </div>
         <!-- 分页开始 -->
@@ -132,7 +118,7 @@
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[5]"
+                :page-sizes="[6]"
                 :page-size="pageSize"
                 layout="prev, pager, next"
                 :total="tableData.length">
@@ -148,19 +134,19 @@
             <el-form
             :model="formaAlter"
             :rules="DialogRules"
-            ref="formaAlter"
+            ref="form"
             >
                 <el-form-item
-                label="学院名称"
+                label="所属专业"
                 :label-width="formLabelWidth"
-                prop="collegeName"
+                prop="majorNames"
                 >
                     <el-input
-                    v-model="formaAlter.collegeName"
+                    v-model="formaAlter.majorNames"
                     ></el-input>
                 </el-form-item>
                 <el-form-item
-                label="院长名称" :label-width="formLabelWidth"
+                label="专业名称" :label-width="formLabelWidth"
                 prop="presidentName"
                 >
                     <el-input
@@ -172,36 +158,36 @@
                 <el-button
                 type="primary"
                 style="display:block;margin:0 auto"
-                @click="submitForm('formaAlter')">提 交</el-button>
+                @click="submitForm('form')">提 交</el-button>
             </div>
         </el-dialog>
         <!-- 修改按钮的弹窗结束 -->
         <!-- 添加按钮的弹窗开始 -->
         <el-dialog
-        :visible.sync="AddForm"
-        width="90%"
-        center
+            :visible.sync="AddForm"
+            width="90%"
+            center
         >
             <el-form
-            :model="formaAdd"
+            :model="formAdd"
             :rules="DialogRulesTwo"
             ref="formAdd"
             >
                 <el-form-item
-                label="学院名称"
+                label="所属专业"
                 :label-width="formLabelWidth"
-                prop="collegeNames"
+                prop="majorNames"
                 >
                     <el-input
-                    v-model="formaAdd.collegeNames"
+                    v-model="formAdd.majorNames"
                     ></el-input>
                 </el-form-item>
                 <el-form-item
-                label="院长名称" :label-width="formLabelWidth"
+                label="专业名称" :label-width="formLabelWidth"
                 prop="presidentNames"
                 >
                     <el-input
-                    v-model="formaAdd.presidentNames"
+                    v-model="formAdd.presidentNames"
                     ></el-input>
                 </el-form-item>
             </el-form>
@@ -225,65 +211,74 @@ export default {
         // 表格数据
         tableData: [
         {
-            LowerSchool: '计算机与软件学院',
-            DeanName: '名字'
+            BelongSchool: '计算机与软件学院',
+            ProfessionalClass: '名字',
+            ProfessionalNumber:'23'
         },
         {
-            LowerSchool: '信息与商务管理学院',
-            DeanName: '...........'
+            BelongSchool: '信息与商务管理学院',
+            ProfessionalClass: '...........',
+            ProfessionalNumber:'23'
         },
         {
-            LowerSchool: '数字艺术与设计学院',
-            DeanName: '名字'
+            BelongSchool: '数字艺术与设计学院',
+            ProfessionalClass: '名字',
+            ProfessionalNumber:'23'
         },
         {
-            LowerSchool: 'xxxxxxxxxxxxx',
-            DeanName: 'namebalbala'
+            BelongSchool: 'xxxxxxxxxxxxx',
+            ProfessionalClass: 'namebalbala',
+            ProfessionalNumber:'23'
         },
         {
-            LowerSchool: '计算机与软件学院',
-            DeanName: '名字'
+            BelongSchool: '计算机与软件学院',
+            ProfessionalClass: '名字',
+            ProfessionalNumber:'23'
         },
         {
-            LowerSchool: '信息与商务管理学院',
-            DeanName: '...........'
+            BelongSchool: '信息与商务管理学院',
+            ProfessionalClass: '...........',
+            ProfessionalNumber:'23'
         },
         {
-            LowerSchool: '数字艺术与设计学院',
-            DeanName: '名字'
+            BelongSchool: '数字艺术与设计学院',
+            ProfessionalClass: '名字',
+            ProfessionalNumber:'23'
         },
         {
-            LowerSchool: 'xxxxxxxxxxxxx',
-            DeanName: 'namebalbala'
+            BelongSchool: 'xxxxxxxxxxxxx',
+            ProfessionalClass: 'namebalbala',
+            ProfessionalNumber:'23'
         },
         ],
         // 分页
         currentPage: 1,
-        pageSize:5,
+        pageSize:6,
         // 修改
         modificationForm: false,
+        // 添加
         AddForm: false,
-        formLabelWidth: '80px',
-        // 修改后的数据
+        // 修改dialog
         formaAlter:{
-                collegeName:"",
-                presidentName:""
-            },
-        // 添加后的数据
-        formaAdd:{
-            collegeNames:"",
-            presidentNames:""
+            majorNames:'',
+            presidentName:''
+        },
+        formLabelWidth: '80px',
+        // 添加dialog
+        formAdd:{
+            majorNames:'',
+            presidentNames:''
         },
         // 修改弹窗校验规则
         DialogRules:{
-            collegeName:[{required:true,message:"注意学院名称不能为空呐",trigger:"blur"}],
+            majorNames:[{required:true,message:"注意学院名称不能为空呐",trigger:"blur"}],
             presidentName:[{required:true,message:"注意院长名称不能为空呐",trigger:"blur"}]
         },
         // 添加弹窗校验规则
         DialogRulesTwo:{
-            collegeNames:[{required:true,message:"注意学院名称不能为空呐",trigger:"blur"}],
+            majorNames:[{required:true,message:"注意学院名称不能为空呐",trigger:"blur"}],
             presidentNames:[{required:true,message:"注意院长名称不能为空呐",trigger:"blur"}]
-        }
+        },
         }
     },
         methods: {
@@ -312,7 +307,7 @@ export default {
             this.modificationForm = true
         },
         // 添加按钮
-        handleAdd(){
+        btnAdd(){
             this.AddForm = true
         },
         // 分页
@@ -332,12 +327,12 @@ export default {
             type: 'success'
         });
         // 修改
-        this.formaAlter.collegeName = "";
+        this.formaAlter.majorNames = "";
         this.formaAlter.presidentName = "";
         this.modificationForm = false
         // 添加
-        this.formaAdd.collegeNames = "";
-        this.formaAdd.presidentNames = "";
+        this.formAdd.majorNames = "";
+        this.formAdd.presidentNames = "";
         this.AddForm = false
         } else {
         this.$message({
@@ -350,7 +345,7 @@ export default {
         },
         // 详情页面
         handleEdit(){
-            this.$router.push('/hSchoolDetail');
+            this.$router.push('/hProfessionalClassDetail');
         }
     },
 }
@@ -376,12 +371,12 @@ export default {
     padding: 10px;
 }
 
-.boxFour {
+.boxFive {
     padding-top: 10px;
 }
 
-.boxFive {
-    padding-top: 10px;
+.boxFour {
+    padding: 10px;
 }
 
 .sumNum {
@@ -406,13 +401,6 @@ export default {
     padding-top: 1%;
 }
 
-/* 两种按钮 */
-.divBtn {
-    padding: 1%;
-    padding-top: 1%;
-    padding-left: 5%;
-}
-
 /* 添加按钮 */
 .addBtn {
     padding-top: 1%;
@@ -422,5 +410,11 @@ export default {
 /* 修改 表格单行的颜色 */
 ::v-deep .el-table tr {
 	background-color: #F4F5FC;
+}
+
+/* 添加按钮 */
+.btnThree {
+    top: 3%;
+    right: -60%;
 }
 </style>
