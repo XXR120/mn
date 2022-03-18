@@ -14,8 +14,9 @@ import university from '../components/headmaster/university.vue'
 import dirCenter from '../components/diretor/dirCenter.vue'
 import dTeacher from '../components/diretor/dTeacher.vue'
 import xueyuan from '../components/diretor/xueyuan.vue'
-
-
+import teacher_detail from '../components/diretor/teacher_detail.vue'
+import xueyuan_detail from '../components/diretor/xueyuan_detail.vue'
+import handCenter from '../components/headmaster/handCenter.vue'
 
 Vue.use(VueRouter)
 
@@ -39,8 +40,9 @@ const routes = [
       { path: '/dirCenter', component: dirCenter },
       { path: '/dTeacher', component: dTeacher },
       { path: '/xueyuan', component: xueyuan },
-      
-      
+      { path: '/teacher_detail', component: teacher_detail },
+      { path: '/xueyuan_detail', component: xueyuan_detail },
+      { path: '/handCenter', component: handCenter },
       
     ]
   }

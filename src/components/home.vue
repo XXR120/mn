@@ -106,6 +106,12 @@
                   <span>专业班级</span>
                 </template>
               </el-menu-item>
+              <el-menu-item index="/handCenter">
+                <template slot="title">
+                  <i class="el-icon-menu"></i>
+                  <span>个人中心</span>
+                </template>
+              </el-menu-item>
             </el-submenu>
 
                     </el-menu>
