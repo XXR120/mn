@@ -1,6 +1,9 @@
 <template>
     <el-card class="box-card" >
         <el-row>
+           <el-button type="danger" plain class="btn" @click="back()">返回</el-button>
+        </el-row>
+        <el-row>
             <el-col :span="4" class="name">姓名： </el-col>
             <el-col :span="4">
                  <el-input
@@ -114,27 +117,6 @@
                  width="250">
             </el-table-column>
         </el-table>
-        <!-- 按钮 --> 
-        <el-row type="flex" justify="center"> 
-            <el-button type="primary" plain class="btn" @click="changepop=true;">修改密码</el-button>
-        </el-row>
-
-        <!-- 修改密码弹窗 -->
-        <el-dialog title="修改密码" :visible.sync="changepop" width="50%" @close="ChangeClose">
-            <el-form :model="Passworld" ref="ChangeRef" label-width="80px"  :rules="lookFormRules" width="200%" >
-                <el-form-item label="修改密码"  label-width="160px"  prop="oldpass">
-                <el-input v-model="Passworld.oldpass" show-password></el-input>
-                </el-form-item>
-                <el-form-item label="再次修改密码："  label-width="160px"  prop="newpass">
-                <el-input v-model="Passworld.newpass" show-password></el-input>
-                </el-form-item>   
-            </el-form>
-            <el-row type="flex" justify="center"> 
-                <el-button type="danger" @click="changepop=false;ChangeClose()">退出</el-button>
-            <el-button type="success" @click="changepop=false;change()">修改</el-button>
-            </el-row>
-        </el-dialog>
-    
     </el-card>
 </template>
 
@@ -180,50 +162,13 @@ export default {
            },],
         // 按钮
          changepop:false,
-        // 密码
-        Passworld:
-            {
-                oldpass:'222',
-                newpass:''
-            },
-        
-        // 密码规则
-        lookFormRules: {
-         oldpass: [
-           { required: true, message: "密码不能为空", trigger: 'blur' },
-           { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: 'blur'}
-         ],
-         newpass: [
-           { required: true, message: "密码不能为空", trigger: 'blur' },
-           { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: 'blur'}
-         ],
-      
-      },
     }
   },
   methods: {
-     // 通过状态
-    async change() {
-    const ConfirmResult = await this.$confirm(
-      "此操作将修改表单状态, 是否继续?",
-      "提示",
-      {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        center:true,
+      back() {
+           this.$router.push('/dTeacher');
       }
-    ).catch((err) => err);
-    if (ConfirmResult !== "confirm") {
-      return this.$message.info("已取消修改");
-    }
-    this.$message.success("修改成功！");
-    },
-    //重置窗口  
-    ChangeClose() {
-        this.$refs['ChangeRef'].resetFields();
-    },
-  } 
+  }
 }
 </script>
 
@@ -255,15 +200,15 @@ export default {
     margin-left: 15%;
     margin-right: -5%;
   }
-  .btn {
-    margin-top: 2%;
-  }
+
   .tab {
       margin-top: 3%;
+      margin-bottom: 4%;
   }
-  .el-input__inner {
-    padding: 0 5px;
+  .btn {
+      margin-left: 5%;
   }
+
  
 
   
