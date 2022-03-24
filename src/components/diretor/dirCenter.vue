@@ -2,7 +2,7 @@
     <el-card class="box-card" >
         <el-row>
             <el-col :span="4" class="name">姓名： </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
                  <el-input
                     placeholder="请输入内容"
                     v-model="nameinput"
@@ -13,7 +13,7 @@
         </el-row>
         <el-row>
             <el-col :span="4" class="name">年龄： </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
                  <el-input
                     placeholder="请输入内容"
                     v-model="oldinput"
@@ -22,7 +22,7 @@
                 </el-input>
             </el-col>
             <el-col :span="4" class="name">性别： </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
                  <el-input
                     placeholder="请输入内容"
                     v-model="sexinput"
@@ -33,7 +33,7 @@
         </el-row>
         <el-row>
             <el-col :span="4" class="name">电话： </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
                  <el-input
                     placeholder="请输入内容"
                     v-model="phoneinput"
@@ -42,7 +42,7 @@
                 </el-input>
             </el-col>
             <el-col :span="4" class="name">邮箱： </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
                  <el-input
                     placeholder="请输入内容"
                     v-model="emailinput"
@@ -53,7 +53,7 @@
         </el-row>
         <el-row>
             <el-col :span="4" class="name">所属学院： </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
                  <el-input
                     placeholder="请输入内容"
                     v-model="schoolinput"
@@ -62,7 +62,7 @@
                 </el-input>
             </el-col>
             <el-col :span="4" class="name">教授科目： </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
                  <el-input
                     placeholder="请输入内容"
                     v-model="teachinput"
@@ -73,7 +73,7 @@
         </el-row>
         <el-row>
             <el-col :span="4" class="name">教师是否院长 </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
                  <el-input
                     placeholder="请输入内容"
                     v-model="peopleinput"
@@ -82,7 +82,7 @@
                 </el-input>
             </el-col>
             <el-col :span="4" class="name">教师职称： </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
                  <el-input
                     placeholder="请输入内容"
                     v-model="jobinput"
@@ -99,7 +99,7 @@
             class="tab"
             >
             <el-table-column
-                prop="cla"
+                prop="ClassName"
                 label="教授班级"
                 width="250">
             </el-table-column>
@@ -108,11 +108,7 @@
                 label="平均分"
                 width="250">
             </el-table-column>
-            <el-table-column
-                prop="other"
-                label="备注"
-                 width="250">
-            </el-table-column>
+           
         </el-table>
         <!-- 按钮 --> 
         <el-row type="flex" justify="center"> 
@@ -120,18 +116,18 @@
         </el-row>
 
         <!-- 修改密码弹窗 -->
-        <el-dialog title="修改密码" :visible.sync="changepop" width="50%" @close="ChangeClose">
-            <el-form :model="Passworld" ref="ChangeRef" label-width="80px"  :rules="lookFormRules" width="200%" >
-                <el-form-item label="修改密码"  label-width="160px"  prop="oldpass">
+        <el-dialog title="修改密码" :visible.sync="changepop" width="80%" >
+            <el-form :label-position="labelPosition" :model="Passworld" ref="lookFormRules" :rules="lookFormRules" label-width="80px"   width="200%" >
+                <el-form-item label="修改密码"  label-width="150px"  prop="oldpass">
                 <el-input v-model="Passworld.oldpass" show-password></el-input>
                 </el-form-item>
-                <el-form-item label="再次修改密码："  label-width="160px"  prop="newpass">
+                <el-form-item label="再次修改密码："  label-width="150px"  prop="newpass">
                 <el-input v-model="Passworld.newpass" show-password></el-input>
                 </el-form-item>   
             </el-form>
             <el-row type="flex" justify="center"> 
                 <el-button type="danger" @click="changepop=false;ChangeClose()">退出</el-button>
-            <el-button type="success" @click="changepop=false;change()">修改</el-button>
+            <el-button type="success" @click="changepop=false;change(Passworld)">修改</el-button>
             </el-row>
         </el-dialog>
     
@@ -141,49 +137,31 @@
 <script>
 export default {
     created() {
-     
+      this.getUserList()
+      this.TeachClass()
     },
    data() {
     
     return {
         // 姓名
-        nameinput: '帅哥',
-        oldinput: '20',
-        sexinput: '男',
-        phoneinput: '134xxxxxxx80',
-        emailinput: '119xxxxxxx@qq.com',
-        schoolinput: '数字艺术与设计学院',
-        teachinput: '数字媒体技术',
-        peopleinput: '是',
-        jobinput: '教授',
+        nameinput: '',
+        oldinput: '',
+        sexinput: '',
+        phoneinput: '',
+        emailinput: '',
+        schoolinput: '',
+        teachinput: '',
+        peopleinput: '',
+        jobinput: '',
+        labelPosition:"left",
         // 表格
-        tableData: [{
-             cla: '信息工程 1 班',
-             grade: '84',
-             other: '无'
-           }, {
-             cla: '信息工程 2 班',
-             grade: '84',
-             other: '无'
-           }, {
-             cla: '信息工程 3 班',
-             grade: '84',
-             other: '无'
-           }, {
-             cla: '信息工程 4 班',
-             grade: '84',
-             other: '无'
-           },{
-             cla: '信息工程 5 班',
-             grade: '84',
-             other: '无'
-           },],
+        tableData: [],
         // 按钮
          changepop:false,
         // 密码
         Passworld:
             {
-                oldpass:'222',
+                oldpass:'',
                 newpass:''
             },
         
@@ -197,32 +175,80 @@ export default {
            { required: true, message: "密码不能为空", trigger: 'blur' },
            { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: 'blur'}
          ],
-      
       },
     }
   },
   methods: {
-     // 通过状态
-    async change() {
-    const ConfirmResult = await this.$confirm(
-      "此操作将修改表单状态, 是否继续?",
-      "提示",
-      {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        center:true,
+     // 修改密码
+    async change(val) {
+      const ConfirmResult = await this.$confirm(
+        "此操作将修改表单状态, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+          center:true,
+        }
+      ).catch((err) => err);
+      if (ConfirmResult !== "confirm") {
+        return this.$message.info("已取消修改");
       }
-    ).catch((err) => err);
-    if (ConfirmResult !== "confirm") {
-      return this.$message.info("已取消修改");
-    }
-    this.$message.success("修改成功！");
+      // 院长修改密码
+      const token = window.localStorage.getItem("token");
+      const account = window.localStorage.getItem("account")
+      const { data: res } = await this.$http.post('/api/modifycode?token='+token,{
+        account:account,
+        code:val.oldpass,
+        confirmCode:val.newpass
+      })
+      if( res.code !== 200 ) {
+        return this.$message.error("修改失败")
+      }
+      // console.log(res);
+      this.$message.success("修改成功")
+    },
+    // 获取信息
+    async getUserList() {
+      var token = window.localStorage.getItem("token");
+      var account = window.localStorage.getItem("account")
+      // console.log(token);
+      const { data: res } = await this.$http.post('/api/deans/checkone?token='+token,{
+        account:account,
+      })
+      // console.log(res);
+      this.nameinput = res.data[0].TeacherName
+      this.oldinput = res.data[0].TeacherAge
+      this.sexinput = res.data[0].TeacherSex
+      this.phoneinput = res.data[0].TeacherPhone
+      this.emailinput = res.data[0].TeacherEmail
+      this.schoolinput = res.data[0].TFormCollege
+      this.teachinput = res.data[0].Subject
+      this.peopleinput = res.data[0].ifPresident
+      this.jobinput = res.data[0].Title
+      window.localStorage.setItem("teacherName",this.nameinput)
+      if( res.code !== 200 ) {
+      //  console.log('获取用户列表失败！')
+      }
+     
+    },
+    // 获取教授班级
+    async TeachClass() {
+      const token = window.localStorage.getItem("token");
+      const account = window.localStorage.getItem("account")
+      // console.log(teacherName);
+      const { data: res } = await this.$http.post('/api/deans/checktwo?token='+token,{
+        email:account,
+      })
+      // console.log(res);
+      this.tableData= res.data
     },
     //重置窗口  
-    ChangeClose() {
-        this.$refs['ChangeRef'].resetFields();
-    },
+    // ChangeClose() {
+    //     this.$refs['ChangeRef'].resetFields();
+    // },
+   
+
   } 
 }
 </script>
@@ -253,7 +279,7 @@ export default {
   .name {
     margin-top: 8px;
     margin-left: 15%;
-    margin-right: -5%;
+    margin-right: -10%;
   }
   .btn {
     margin-top: 2%;
