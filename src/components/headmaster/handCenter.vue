@@ -1,125 +1,211 @@
 <template>
   <!-- 教师个人信息 -->
   <el-card>
-    <el-descriptions :column="2" :model="peopleDate">
+    <el-descriptions :column="2" :model="peopleData">
       <el-descriptions-item label="姓名">
-        {{ peopleDate.name }}
+        {{ peopleData.HeadName }}
       </el-descriptions-item>
       <el-descriptions-item label="年龄">
-        {{ peopleDate.age }}
+        {{ peopleData.HeadAge }}
       </el-descriptions-item>
       <el-descriptions-item label="性别">
-        {{ peopleDate.sex }}
+        {{ peopleData.HeadSex }}
       </el-descriptions-item>
       <el-descriptions-item label="电话">
-        {{ peopleDate.num }}
+        {{ peopleData.HeadPhone }}
       </el-descriptions-item>
       <el-descriptions-item label="邮箱">
-        {{ peopleDate.qq }}
+        {{ peopleData.HeadEmail }}
       </el-descriptions-item>
       <el-descriptions-item label="所属学院">
-        {{ peopleDate.xueyuan }}
+        {{ peopleData.HeadCollege }}
       </el-descriptions-item>
       <el-descriptions-item label="教授科目">
-        {{ peopleDate.kemu }}
+        {{ peopleData.SubjectName }}
       </el-descriptions-item>
       <el-descriptions-item label="岗位">
-        {{ peopleDate.gangwei  }}
+        {{ peopleData.ifPresident }}
       </el-descriptions-item>
       <el-descriptions-item label="职称">
-        {{ peopleDate.cheng }}
+        {{ peopleData.cheng }}
       </el-descriptions-item>
     </el-descriptions>
 
     <!-- 教授班级平均分 -->
-    <el-table :data="headData"  align="center" style="width:100%">
-      <el-table-column prop="headClass"  label="教授班级" width="200"></el-table-column>
-      <el-table-column prop="headPoint" label="期末平均分" width="200"> </el-table-column>
+    <el-table :data="teachtableData" align="center" style="width: 100%">
+      <el-table-column
+        prop="ClassName"
+        label="教授班级"
+        width="150"
+      ></el-table-column>
+      <el-table-column prop="grade" label="期末平均分" width="100">
+      </el-table-column>
     </el-table>
-<el-row><el-button  @click="dialogFormVisible = true">修改密码</el-button></el-row>
+    <el-row
+      ><el-button @click="dialogFormVisible = true">修改密码</el-button></el-row
+    >
 
-<!-- 修改密码弹窗 -->
-<div class="tanchuang">
-  <!-- :visible.sync控制弹窗显示隐藏 -->
-<el-dialog :visible.sync="dialogFormVisible" overflow="auto"  >
-  <el-form :model="form">
-    修改密码
-    <el-row>
-      <el-col :span="10">
-        <el-input v-model="headchangemima1"></el-input>
-      </el-col>
-    </el-row>
-     再次输入
-      <el-row>
-       <el-col :span="10">
-         <el-input  v-model="headchangemima2"></el-input>
-        </el-col>
-      </el-row>
-  </el-form>
-  <div slot="footer" class="dialog-footer">
-   <el-row>  <el-button type="primary" @click="dialogFormVisible = false"  >确 定</el-button></el-row>
-  </div>
-</el-dialog>
-</div>
+    <!-- 修改密码弹窗 -->
+    <div class="tanchuang">
+      <!-- :visible.sync控制弹窗显示隐藏 -->
+      <el-dialog :visible.sync="dialogFormVisible" overflow="auto">
+        <el-form :rules="FormRules" ref="Form" :model="Form">
 
+          <el-form-item label="修改密码" prop="a1">
+              <el-input type="password" v-model="Form.a1"></el-input>
+          </el-form-item>
+          <el-form-item label="再次输入" prop="a2">
+              <el-input type="password" v-model="Form.a2"></el-input>
+          </el-form-item>
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-row>
+            <el-button
+              type="primary"
+              @click="
+                dialogFormVisible = false;
+                onsubmit();
+              "
+              >确 定</el-button
+            ></el-row
+          >
+        </div>
+      </el-dialog>
+    </div>
   </el-card>
 </template>
 
 <script>
 export default {
-
   data() {
     return {
-      aa:'',
+      aa: "",
       // 修改密碼
-      headchangemima1:'',
-      headchangemima2:'',
-      // 教师个人信息
-      peopleDate: {
-       name: "谢某某",
-        age: "28",
-        sex: "女",
-        num: "1234567890098",
-        mail: "87654321",
-        xueyuan: "计算机与软件学院",
-        kemu: "计算机",
-        gangwei: "否",
-        cheng: "副教授",
+     Form:{
+        a1:'',
+        a2:''
       },
-      // 教师班级成绩表格
-      headData: [
+      // 教师个人信息
+      peopleData: {
+        HeadName: "name",
+        HeadAge: "age",
+        HeadSex: "sex",
+        HeadPhone: "12345678901",
+        HeadEmail: "123456789",
+        HeadCollege: "college",
+        SubjectName: "subject",
+        ifPresident: "否",
+        cheng: "111",
+      },
+      // 班级成绩表格
+      teachtableData: [
         {
-          headClass: "信息工程20201",
-          headPoint: "44",
-        },
-        {
-          headClass: "信息工程20201",
-          headPoint: "44",
-        }, {
-          headClass: "信息工程20201",
-          headPoint: "44",
-        }, {
-          headClass: "",
-          headPoint: "",
-        },
-      ],
+          ClassName: "",
+          grade: "",
+        },],
       // 弹窗扽显示隐藏
       dialogTableVisible: false,
       dialogFormVisible: false,
-      form:{},
-      screenWidth: null,  //屏幕尺寸
+      screenWidth: null, //屏幕尺寸
+
+      // 输入框验证
+      FormRules: {
+        a1: [
+          { required: true, message: "密码", trigger: "blur" },
+          { min: 2, max: 11, message: "2~11位", trigger: "blur" },
+        ],
+
+        a2: [
+          { required: true, message: "请再次输入验证码", trigger: "blur" },
+           { min: 2, max: 11, message: "2~11位", trigger: "blur" },
+        ],
+      },
     };
   },
+  created: function () {
+    this.teachermessage();
+    this.point();
+  },
   methods: {
-    // 弹窗里确定修改密码
-    // btnyes(){
-    //   alert("成功")
-    // }
 
-    // 监听屏幕宽度
+    // 弹窗里确定修改密码
+    async onsubmit() {
+      let token = localStorage.getItem("token"); //取token
+      let account = localStorage.getItem("account");
+      var password1 = this.Form.a1;
+      var password2 = this.Form.a2;
+      if(password1==''||password2==''){
+         this.$message.error("请输入密码")
+         return false
+      }
+    //  两次密码输入一致
+      if(password1!== password2){
+         this.$message.error("两次输入不一致")
+        return false;
+      }
+      const { data: res } = await this.$http.post(
+        `/api/teacher/teachermodifycode?token=` + token,
+        {
+          account: account,
+          password: password1,
+        }
+      );
+      if(res.code==200){
+         this.$message.success("修改成功！")
+      }
+    },
+
+    // 教师信息展示
+    async teachermessage() {
+      let token = localStorage.getItem("token"); //取token
+      var id = 7;
+      var subject = 1;
+      // console.log(id);
+      // console.log(token);
+      // console.log(subject);
+      const { data: res } = await this.$http.get(
+        `/api/teacher/personal?token=` +
+          token +
+          "&id=" +
+          id +
+          "&subject=" +
+          subject
+      );
+      console.log(res);
+      // console.log(res.data[0]);
+      // console.log(res.data[1]);
+      // console.log(res.data[0][0].ifPresident);
+      this.peopleData.SubjectName = res.data[1][0].SubjectName;
+      this.peopleData.HeadAge = res.data[0][0].TeacherAge;
+      this.peopleData.HeadName = res.data[0][0].TeacherName;
+      this.peopleData.HeadSex = res.data[0][0].TeacherSex;
+      this.peopleData.HeadPhone = res.data[0][0].TeacherPhone;
+      this.peopleData.HeadEmail = res.data[0][0].TeacherEmail;
+      this.peopleData.HeadCollege = res.data[0][0].HeadCollege;
+      this.peopleData.ifPresident = res.data[0][0].ifPresident;
+    },
+
+
+       // 平均分展示
+      async  point(){
+        let token = localStorage.getItem("token");
+        const email = localStorage.getItem("account");
+         const { data: res } = await this.$http.post(
+        `/api/deans/checktwo?token=` + token,
+        {
+          email : email,
+        }
+      );
+      // console.log(res.data);
+      // console.log(res.data.length);
+      this.teachtableData=[];
+      for(let i=0;i<res.data.length;i++){
+           this.teachtableData.push(res.data[i]);
+      }
+      },
 
   },
-
 };
 </script>
 <style scoped>
@@ -127,28 +213,33 @@ export default {
   text-align: center;
   margin: 20px;
 }
-.el-dialog{
+.el-dialog {
   text-align: center;
 }
-.el-form{
+.el-form {
   width: 560px;
 }
-.el-descriptions{
+.el-descriptions {
   height: 250px;
   font-size: 20px;
 }
-.el-input{
-  width: 40vw;
+.el-input {
+  width: 30vw;
 }
-@media screen and (max-width:800px) {
-  .el-input{
+@media screen and (max-width: 800px) {
+  .el-input {
     float: left;
     width: 100px;
   }
 }
-@media screen and (max-width:670px) {
-
-.el-descriptions{
+@media screen and (max-width: 670px) {
+  .el-descriptions {
+    font-size: 10px;
+  }
+.el-input {
+  width: 19vw;
+}
+.el-table-column{
   font-size: 10px;
 }
 }
