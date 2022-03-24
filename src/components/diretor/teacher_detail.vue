@@ -102,7 +102,7 @@
             class="tab"
             >
             <el-table-column
-                prop="cla"
+                prop="ClassName"
                 label="教授班级"
                 width="250">
             </el-table-column>
@@ -111,11 +111,6 @@
                 label="平均分"
                 width="250">
             </el-table-column>
-            <el-table-column
-                prop="other"
-                label="备注"
-                 width="250">
-            </el-table-column>
         </el-table>
     </el-card>
 </template>
@@ -123,51 +118,70 @@
 <script>
 export default {
     created() {
-     
+     this.getUser()
+     this.TeachClass()
     },
    data() {
     
     return {
         // 姓名
-        nameinput: '帅哥',
-        oldinput: '20',
-        sexinput: '男',
-        phoneinput: '134xxxxxxx80',
-        emailinput: '119xxxxxxx@qq.com',
-        schoolinput: '数字艺术与设计学院',
-        teachinput: '数字媒体技术',
-        peopleinput: '是',
-        jobinput: '教授',
+        nameinput: '',
+        oldinput: '',
+        sexinput: '',
+        phoneinput: '',
+        emailinput: '',
+        schoolinput: '',
+        teachinput: '',
+        peopleinput: '',
+        jobinput: '',
         // 表格
-        tableData: [{
-             cla: '信息工程 1 班',
-             grade: '84',
-             other: '无'
-           }, {
-             cla: '信息工程 2 班',
-             grade: '84',
-             other: '无'
-           }, {
-             cla: '信息工程 3 班',
-             grade: '84',
-             other: '无'
-           }, {
-             cla: '信息工程 4 班',
-             grade: '84',
-             other: '无'
-           },{
-             cla: '信息工程 5 班',
-             grade: '84',
-             other: '无'
-           },],
+        tableData: [],
         // 按钮
-         changepop:false,
+        changepop:false,
     }
   },
   methods: {
-      back() {
-           this.$router.push('/dTeacher');
-      }
+    back() {
+      this.$router.push('/dTeacher');
+    },
+    // 显示
+    async getUser() {
+        const token = window.localStorage.getItem("token");
+        const tea_email = window.localStorage.getItem("tea_email");
+        // console.log(val);
+        const { data: res } = await this.$http.post('/api/deans/checkdetails?token='+token,{
+          email:tea_email
+        })
+        if( res.code !== 200 ) {
+          return this.$message.error("搜索失败")
+        }
+        // console.log(res);
+        this.nameinput = res.data[0].TeacherName
+        this.oldinput = res.data[0].TeacherAge
+        this.sexinput = res.data[0].TeacherSex
+        this.phoneinput = res.data[0].TeacherPhone
+        this.emailinput = res.data[0].TeacherEmail
+        this.schoolinput = res.data[0].TFormCollege
+        this.teachinput = res.data[0].Subject
+        this.peopleinput = res.data[0].ifPresident
+        this.jobinput = res.data[0].Title
+    },
+    // 班级显示
+    async TeachClass() {
+        const token = window.localStorage.getItem("token");
+        const tea_email = window.localStorage.getItem("tea_email");
+        // const tea_name = window.localStorage.getItem("tea_name");
+        // console.log(val);
+        const { data: res } = await this.$http.post('/api/deans/teachclassandgrade?token='+token,{
+          email:tea_email,
+        })
+        if( res.code !== 200 ) {
+          // console.log(res);
+          return this.$message.error("该老师未教授班级")
+        }
+        // console.log(res);
+        this.tableData= res.data
+    },
   }
 }
 </script>

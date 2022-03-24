@@ -1,34 +1,35 @@
 <template>
     <el-card class="box-card">
         <el-row>
-           <el-col :span="4" class="search">
+           <el-col :span="5" class="search">
                <el-input v-model="input" placeholder="请输入内容"></el-input>
            </el-col>
-            <el-button icon="el-icon-search" type="primary"></el-button>
+            <el-button icon="el-icon-search" type="primary" @click="searchTeaName(input)"></el-button>
         </el-row>
         <el-table
-          :data="tableData"
+          :data="tableData.slice((currentPage -1)*pageSize,currentPage*pageSize)"
+          :stripe="true"
           align="center"
           style="width: 100%">
           <el-table-column
             label="专业名称"
             width="350">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.subject_name }}</span>
+              <span style="margin-left: 10px">{{ scope.row.SpName }}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="人数"
             width="200">
             <template slot-scope="scope">
-              <el-tag size="medium">{{ scope.row.people }}</el-tag>
+              <el-tag size="medium">{{ scope.row.studentnumber }}</el-tag>
             </template>
           </el-table-column>
            <el-table-column
-            label="开设专业数"
+            label="开设班级数"
             width="200">
             <template slot-scope="scope">
-              <el-tag size="medium">{{ scope.row.subject_num }}</el-tag>
+              <el-tag size="medium">{{ scope.row.classnumber }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="200">
@@ -36,18 +37,12 @@
               <el-button
                 size="mini"
                 type="primary"
-                @click="handleEdit(scope.$index, scope.row);">详细</el-button>
+                @click="schooleDetail( scope.row);">详细</el-button>
             </template>
           </el-table-column> 
         </el-table>
         <el-row  class="teanum">
-          <el-col :span="4">专业总数：</el-col>
-          <el-input
-            class="tea_input"
-            placeholder="请输入内容"
-            v-model="teanum"
-            :disabled="true">
-          </el-input> 
+          专业总数：{{teanum}}
         </el-row>
         <!-- 修改弹窗 -->
         <el-dialog title="修改信息" :visible.sync="changepop" width="50%" @close="ChangeClose">
@@ -66,13 +61,17 @@
         </el-dialog>
         <!-- 分页 -->
         <div class="block" align="center">
-          <el-pagination
+           <el-pagination
+            small
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page.sync="currentPage3"
-            :page-size="100"
-            layout="prev, pager, next, jumper"
-            :total="1000">
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :page-sizes="[5]"
+            layout="prev, pager, next"
+            :total="tableData.length"
+            align="center"
+            >
           </el-pagination>
         </div>
     </el-card>
@@ -80,47 +79,21 @@
 
 <script>
 export default {
+   created() {
+      this.getUserList()
+    },
     data() {
       return {
         // 搜索
         input:"",
         // 分页
-        currentPage1: 5,
-        currentPage2: 5,
-        currentPage3: 5,
-        currentPage4: 4,
+        // 分页
+        currentPage:1,
+        pageSize:8,
         // 教师数量
-        teanum:'100',
+        teanum:'',
         // 表格
-        tableData: [{
-          subject_name: '数字媒体技术',
-          people: '44',
-          subject_num: '5'
-        },{
-          subject_name: '信息工程',
-          people: '44',
-          subject_num: '5'
-        },{
-          subject_name: '大数据',
-          people: '44',
-          subject_num: '5'
-        },{
-          subject_name: '英语',
-          people: '44',
-          subject_num: '5'
-        },{
-          subject_name: '计算机技术',
-          people: '44',
-          subject_num: '5'
-        },{
-          subject_name: '物流管理',
-          people: '44',
-          subject_num: '5'
-        },{
-          subject_name: '会计',
-          people: '44',
-          subject_num: '5'
-        },],
+        tableData: [],
          // 按钮
         changepop:false,
         // 密码
@@ -147,20 +120,53 @@ export default {
     methods: {
         // 表格
       handleEdit(index, row) {
-        console.log(index, row);
+        // console.log(index, row);
         this.$router.push('/xueyuan_detail');
-      },
-      handleDelete(index, row) {
-        console.log(index, row);
       },
       // 分页
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.pageSize = val;
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.currentPage = val;
       },
-
+       // 获取所有人显示
+      async getUserList() {
+        const token = window.localStorage.getItem("token");
+        const { data: res } = await this.$http.get('/api/deans/name?token='+token)
+       
+        if( res.code !== 200 ) {
+        //  console.log('获取用户列表失败！')
+        }
+        this.tableData = res.data
+        this.teanum = res.data.length
+        // console.log(res);
+      },
+      // 专业详细
+      schooleDetail(val){
+        window.localStorage.setItem("spName",val.SpName);
+        this.$router.push('/xueyuan_detail')
+      },
+       // 搜索
+      async searchTeaName(val) {
+        const token = window.localStorage.getItem("token");
+        const { data: res } = await this.$http.post('/api/deans/search?token='+token,{
+          name:val
+        })
+       if(val=='') {
+          return this.getUserList()
+       }
+        if( res.code !== 200 ) {
+          return this.$message.error("搜索失败")
+        }
+        // console.log(res);
+        this.tableData = res.data
+        this.$message.success("搜索成功！");
+      },
+      studentChange(val) {
+        // console.log(val);
+        window.localStorage.setItem("oldStudentName",val.StudentName);
+      },
         // 通过状态
       async change() {
       const ConfirmResult = await this.$confirm(
@@ -203,11 +209,6 @@ export default {
   }
   .teanum {
     margin-top: 2%;
-    margin-left: 100px;
-  }
-  .tea_input {
-    /* margin-left: -150px; */
-    width: 20%;
   }
   .block {
     margin-top: 5%;
