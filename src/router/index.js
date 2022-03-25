@@ -52,11 +52,22 @@ const router = new VueRouter({
   routes
 })
 
-//路由守卫
-// router.beforeEach((to, from, next) => {
-  //const token = localStorage.getItem('token')
-//   if (to.name !== 'Login' && !token) next({ name: 'Login' })
-//   else next()
-// })
+// 挂载路由导航守卫
+router.beforeEach((to, from, next) => {
+  // to 将要访问的路径
+  // from 代表从那个路径跳转的
+  // next 是一个函数，表示放行
+  //   next 放行      next("/login")  强制跳转
+  if (to.path === '/login') return next();
+  if (to.path === '/forget') return next();
 
+  const tokenStr = window.localStorage.getItem('token')
+  if (!tokenStr) 
+    return next('/login')
+  else {
+    return next()
+  }
+
+  
+})
 export default router

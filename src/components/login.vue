@@ -136,14 +136,13 @@ export default {
 
       if(res.code == 200){
 
-        this.$message.success("登录成功！")
-
-        this.$router.push('/welcome')
-        // console.log(res);
         localStorage.setItem('token',res.data.token)
 
         localStorage.setItem('account',res.data.account)
 
+        this.$router.push('/welcome')
+
+        this.$message.success("登录成功！")
       }
 
       if(res.code == 100){
