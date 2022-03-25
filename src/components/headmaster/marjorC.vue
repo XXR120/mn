@@ -7,7 +7,7 @@
                 class="inputSearch"
                 size="mini"
                 v-model="input"
-                placeholder="根据专业班级名称查询"
+                placeholder="根据专业名称查询"
             >
             </el-input>
             <!-- 搜索按钮开始 -->
@@ -19,6 +19,7 @@
                 circle
                 @click="SearchCollege()"
             ></el-button>
+            <!-- 搜索按钮结束 -->
             <!-- 搜索按钮结束 -->
             <el-button
                 size="mini"
@@ -34,7 +35,6 @@
                 type="primary"
                 size="mini"
                 plain
-                class="el-icon-edit"
                 @click="btnAdd()"
             >
             添加
@@ -60,21 +60,21 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                label="专业班级"
-                prop="SpName"
+                label="班级名称"
+                prop="ClassName"
                 min-width="200"
             >
             </el-table-column>
             <el-table-column
                 align="center"
                 label="人数"
-                prop="num"
+                prop="Number"
                 min-width="150"
             >
             </el-table-column>
             <el-table-column
                 align="center"
-                label="数据操作"
+                label="操 作"
                 min-width="300"
             >
             <template slot-scope="scope">
@@ -93,7 +93,6 @@
             <el-button
                 size="mini"
                 type="danger"
-                icon="el-icon-delete"
                 @click="handleDelete(scope.row)">
                 删 除
             </el-button>
@@ -149,12 +148,12 @@
             ref="form"
             >
                 <el-form-item
-                label="所属学院"
+                label="所属专业"
                 :label-width="formLabelWidth"
-                prop="collegeName"
+                prop="majorNames"
                 >
                     <el-input
-                    v-model="formaAlter.collegeName"
+                    v-model="formaAlter.majorNames"
                     ></el-input>
                 </el-form-item>
                 <el-form-item
@@ -186,12 +185,12 @@
             ref="formAdd"
             >
                 <el-form-item
-                label="所属学院"
+                label="所属专业"
                 :label-width="formLabelWidth"
-                prop="collegeNames"
+                prop="majorNames"
                 >
                     <el-input
-                    v-model="formAdd.collegeNames"
+                    v-model="formAdd.majorNames"
                     ></el-input>
                 </el-form-item>
                 <el-form-item
@@ -218,9 +217,9 @@
 export default {
     data() {
         return {
-        info:{},
         // 搜索输入框
         input: '',
+        info:{},
         // 表格数据
         tableData: [],
         // 分页
@@ -232,42 +231,48 @@ export default {
         AddForm: false,
         // 修改dialog
         formaAlter:{
-            collegeName:'',
+            majorNames:'',
             presidentName:''
         },
         formLabelWidth: '80px',
         // 添加dialog
         formAdd:{
-            collegeNames:'',
+            majorNames:'',
             presidentNames:''
         },
         // 修改弹窗校验规则
         DialogRules:{
-            collegeName:[{required:true,message:"注意学院名称不能为空呐",trigger:"blur"}],
+            majorNames:[{required:true,message:"注意学院名称不能为空呐",trigger:"blur"}],
             presidentName:[{required:true,message:"注意院长名称不能为空呐",trigger:"blur"}]
         },
         // 添加弹窗校验规则
         DialogRulesTwo:{
-            collegeNames:[{required:true,message:"注意学院名称不能为空呐",trigger:"blur"}],
+            majorNames:[{required:true,message:"注意学院名称不能为空呐",trigger:"blur"}],
             presidentNames:[{required:true,message:"注意院长名称不能为空呐",trigger:"blur"}]
+        },
         }
-    }
-},
-    created() {
-        this.getAllInfo();
+    },
+        created() {
+        this.Detid = this.$route.query.Detid;
         this.getAllNumber();
+        this.getAllInfo();
     },
         methods: {
-        // 获取专业总数
-        async getAllNumber(){
-            const token = localStorage.getItem('token');
+        // 获取所有学院的数量
+        async getAllNumber() {
+            const token=localStorage.getItem('token');
             const { data:res } = await this.$http.get('/api/speciality/allsp?token=' + token);
-            this.info = res.data;
-        },
-        // 获取所有的数据
+            this.info = res.data
+            },
+        // 获取所有的学院信息
         async getAllInfo() {
-            const token = localStorage.getItem('token');
-            const { data:res } = await this.$http.get('/api/speciality/showall?token=' + token);
+            sessionStorage.setItem('Detid',this.Detid);
+            const token=localStorage.getItem('token');
+            const Detid=sessionStorage.getItem('Detid');
+            const { data:res } = await this.$http.post('/api/speciality/xiangqing1', {
+                id: Detid,
+                token: token
+            });
             this.tableData = res.data;
         },
         // 删除按钮
@@ -288,7 +293,7 @@ export default {
                 this.getAllInfo();
                 this.$message({
                 type: 'success',
-                message: '删除成功!~'
+                message: '删除成功!'
             });
             } else {
                 this.$message.error('删除失败!~');
@@ -311,13 +316,13 @@ export default {
             const Addid = sessionStorage.getItem('Addid');
             const { data:res } = await this.$http.post('/api/speciality/modify', {
                 id: Addid,
-                FormCollege: this.formaAlter.collegeName,
+                FormCollege: this.formaAlter.majorNames,
                 SpName: this.formaAlter.presidentName,
                 token: token
             });
             if(res.code === 200) {
             this.$message({
-            message: '修改成功~',
+            message: '操作成功~',
             type: 'success'
         });
                 this.getAllInfo();
@@ -335,13 +340,13 @@ export default {
             const { data:res } = await this.$http.post('/api/speciality/add',
             {
                 SpName: this.formAdd.presidentNames,
-                FormCollege: this.formAdd.collegeNames,
+                FormCollege: this.formAdd.majorNames,
                 token: token
             });
             if(res.code == 200) {
-            this.$message({
+                this.$message({
                 showClose: true,
-                message: '添加成功~',
+                message: '查询成功~',
                 type: 'success'
         });
                 this.getAllInfo();
@@ -357,16 +362,16 @@ export default {
         handleCurrentChange(val) {
         this.currentPage=val;
         },
-        // 修改+弹窗提交按钮
+        // 修改+添加弹窗提交按钮
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
         if (valid) {
         // 修改
-        this.formaAlter.collegeName = "";
+        this.formaAlter.majorNames = "";
         this.formaAlter.presidentName = "";
         this.modificationForm = false
         // 添加
-        this.formAdd.collegeNames = "";
+        this.formAdd.majorNames = "";
         this.formAdd.presidentNames = "";
         this.AddForm = false
         } else {
@@ -379,14 +384,8 @@ export default {
             });
         },
         // 详情页面
-        handleEdit(item){
-            sessionStorage.setItem('idid',item.id);
-            const Detid = sessionStorage.getItem('idid');
-            this.$router.push({ path:'/marjorC', query: { Detid: Detid}});
-        },
-        // 刷新按钮
-        refresh() {
-            this.$router.go(0);
+        handleEdit(){
+            this.$router.push('/marjorClass2Detail');
         },
         // 根据下设学院名称查询
         async SearchCollege() {
@@ -410,6 +409,10 @@ export default {
         });
             }
         },
+        // 刷新按钮
+        refresh() {
+            this.$router.go(0);
+        }
     },
 }
 </script>
