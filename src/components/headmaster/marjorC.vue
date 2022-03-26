@@ -31,10 +31,22 @@
             <!-- 搜索框结束 -->
             <!-- 添加按钮开始 -->
             <div class="addBtn">
+            <!-- 返回按钮结束 -->
+            <el-button
+                size="mini"
+                class="btnOne"
+                type="primary"
+                plain
+                @click="hReturn()"
+            >
+            返回
+            </el-button>
+            <!-- 返回按钮结束 -->
             <el-button
                 type="primary"
                 size="mini"
                 plain
+                class="el-icon-edit"
                 @click="btnAdd()"
             >
             添加
@@ -408,6 +420,10 @@ export default {
                     type: 'error'
         });
             }
+        },
+        // 返回按钮
+        hReturn(){
+            this.$router.push('/marjorClass2');
         },
         // 刷新按钮
         refresh() {

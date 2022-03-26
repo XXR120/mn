@@ -25,7 +25,7 @@
             type="primary"
             plain
             @click="refresh()"
-            >搜索重置</el-button>
+            >重置</el-button>
             </div>
             <!-- 搜索框结束 -->
             <div class="divBtn">
@@ -476,20 +476,13 @@ export default {
         beforeAvatarUpload(file) {
             const extension = file.name.split(".")[1] === "xls";
             const extension2 = file.name.split(".")[1] === "xlsx";
-            const isLt2M = file.size / 1024 / 1024 < 10;
-            if (!extension && !extension2 && !extension3 && !extension4) {
+            if (!extension && !extension2) {
                 this.$message({
-                message: '上传模板只能是 xls、xlsx 格式~',
+                message: '上传文件只能是 xls、xlsx 格式~',
                 type: 'warning'
         });
         }
-            if (!isLt2M) {
-                this.$message({
-                message: '上传模板大小不能超过 10MB~',
-                type: 'warning'
-        });
-        }
-            return extension || extension2 || extension3 || (extension4 && isLt2M);
+            return extension || extension2;
     },
         submitUpload() {
             if (this.businessType != null) {
