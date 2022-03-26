@@ -132,7 +132,6 @@ export default {
     data() {
         return {
         config: {
-        name:'男',
         data: [],
         shape: 'round',
         waveHeight: 25,

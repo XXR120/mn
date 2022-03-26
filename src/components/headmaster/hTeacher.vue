@@ -1,4 +1,8 @@
+
 ﻿<template>
+
+
+<template>
 
     <div class="box">
 
@@ -51,6 +55,10 @@
                 plain
 
                 @click="refresh()"
+
+
+            >重置</el-button>
+
 
             >重置</el-button>
 
@@ -871,13 +879,16 @@
         <!-- 添加按钮的弹窗结束 -->
 
     </div>
-
 </template>
 
 
 
 <script>
 
+export default {
+
+
+<script>
 export default {
 
     data() {
@@ -1478,6 +1489,7 @@ export default {
 
             const extension2 = file.name.split(".")[1] === "xlsx";
 
+
             // const isLt2M = file.size / 1024 / 1024 < 10;
 
             if (!extension && !extension2) {
@@ -1486,11 +1498,18 @@ export default {
 
                 message: '上传文件只能是 xls、xlsx 格式~',
 
+
+            // const isLt2M = file.size / 1024 / 1024 < 10;
+            if (!extension && !extension2) {
+                this.$message({
+                message: '上传文件只能是 xls、xlsx 格式~',
+
                 type: 'warning'
 
         });
 
         }
+
 
         //     if (!isLt2M) {
 
@@ -1504,6 +1523,15 @@ export default {
 
         // }
 
+            return extension || extension2;
+
+
+        //     if (!isLt2M) {
+        //         this.$message({
+        //         message: '上传模板大小不能超过 10MB~',
+        //         type: 'warning'
+        // });
+        // }
             return extension || extension2;
 
     },
@@ -1556,6 +1584,10 @@ export default {
 
 </script>
 
+
+
+
+<style scoped>
 
 
 <style scoped>

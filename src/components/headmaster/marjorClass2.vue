@@ -54,7 +54,7 @@
             <el-table-column
                 align="center"
                 label="所属学院"
-                prop="CollegeName"
+                prop="FormCollege"
                 min-width="200"
             >
             </el-table-column>
