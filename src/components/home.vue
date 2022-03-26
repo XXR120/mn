@@ -137,7 +137,9 @@ export default {
         this.isCollapse=!this.isCollapse
       },
     loginout() {
+      localStorage.clear();
       this.$router.push("/login");
+      
     },
 
   },

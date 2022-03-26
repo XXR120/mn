@@ -133,7 +133,7 @@
         </el-dialog>
         <!-- 添加弹窗 -->
         <el-dialog title="添加信息" :visible.sync="addpop" width="80%" >
-          <el-form :label-position="labelPosition" :model="addForm" ref="lookFormRules" label-width="80px"  :rules="lookFormRules" width="200%" >
+          <el-form :label-position="labelPosition" :model="addForm" ref="addFormRules" label-width="80px"  :rules="addFormRules" width="200%" >
               <el-form-item label="添加姓名"  label-width="80px"  prop="add_studentName">
               <el-input v-model="addForm.add_studentName" ></el-input>
               </el-form-item>
@@ -225,6 +225,25 @@ export default {
            { min: 1, max: 3, message: "长度在 1 到 3 个字符", trigger: 'blur'}
          ],
          change_id: [
+           { required: true, message: "不能为空", trigger: 'blur' },
+           { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: 'blur'}
+         ],
+      },
+       // 密码规则
+        addFormRules: {
+         add_studentName: [
+           { required: true, message: "不能为空", trigger: 'blur' },
+           { min: 1, max: 10, message: "长度在 1 到 10 个字符", trigger: 'blur'}
+         ],
+         add_sex: [
+           { required: true, message: "不能为空", trigger: 'blur' },
+           { min: 1, max: 10, message: "长度在 1 到 10 个字符", trigger: 'blur'}
+         ],
+         add_age: [
+           { required: true, message: "不能为空", trigger: 'blur' },
+           { min: 1, max: 3, message: "长度在 1 到 3 个字符", trigger: 'blur'}
+         ],
+         add_id: [
            { required: true, message: "不能为空", trigger: 'blur' },
            { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: 'blur'}
          ],
@@ -414,6 +433,11 @@ export default {
         }
         // console.log(res);
         this.getUserList();
+        val.change_sex = ''
+        val.change_name = ''
+        val.change_age = ''
+        val.change_id = ''
+
         this.$message.success("修改成功！");
       },
       // 删除弹窗
@@ -471,11 +495,16 @@ export default {
           id: val.add_id,
         })
         if( res.code !== 200 ) {
+           console.log(res);
           return this.$message.error("添加失败")
         }
-        // console.log(res);
+        console.log(res);
         // this.tableData = res.data
-        // this.getUserList()
+        this.getUserList()
+        val.add_sex = ''
+        val.add_age = ''
+        val.add_id = ''
+        val.add_studentName = ''
         this.$message.success("添加成功！");
       },
       //规则重置

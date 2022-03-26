@@ -197,15 +197,20 @@ export default {
       // 院长修改密码
       const token = window.localStorage.getItem("token");
       const account = window.localStorage.getItem("account")
-      const { data: res } = await this.$http.post('/api/modifycode?token='+token,{
+      const { data: res } = await this.$http.post('/api/deans/modifycode?token='+token,{
         account:account,
         code:val.oldpass,
         confirmCode:val.newpass
       })
       if( res.code !== 200 ) {
+       
+        val.oldpass=''
+        val.newpass=''
         return this.$message.error("修改失败")
-      }
+      }                                     
       // console.log(res);
+      val.oldpass=''
+      val.newpass=''
       this.$message.success("修改成功")
     },
     // 获取信息
